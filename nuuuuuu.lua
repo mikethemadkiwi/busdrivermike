@@ -1,0 +1,14 @@
+---- ZONES
+-- menuzone - players can spawn a bus here if there isnt one already.
+-- passengerzone - players can walk in here to get in bus.
+-- departzone - bus spawns here with driver etc.
+-- recievezone - bus enters, stops, boots players out, then despawns.
+---- 
+-- buses must ask server side to spawn.
+-- on boolean reponse true  bus spawns. on false, it doesnt
+-- will send sevrer msg on true announcing bus arrival at depot.
+-- waits 2 mins, drives to depot, despawns.
+----
+-- blip on bus added and deleted when active bus lists are done.
+-- blip for netid of bus sent to server for listing to players as blips
+-- listener for removal of the same

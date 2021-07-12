@@ -147,6 +147,18 @@ if BDDB == nil then
                 recieving = {x = -390.1, y = 1214.1, z = 325.63, h = 332.07}
             },
             blip = {sprite = 58, color = 3, scale = 1.0}
+        }, 
+        {
+            uid = 'dock1',
+            name = "Industrial Dock Transfer",
+            aZone = 164,
+            zones = {
+                menu = {x = 784.3, y = -2947.8, z = 5.9},
+                passenger = {},
+                departure = {x = 760.9, y = -2948.5, z = 5.83, h = 181.11},
+                recieving = {x = 760.9, y = -2948.5, z = 5.85, h = 332.07}
+            },
+            blip = {sprite = 58, color = 3, scale = 1.0}
         }
     }
     BDDB.Driver = {}

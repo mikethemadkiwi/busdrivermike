@@ -1,15 +1,3 @@
--- local Keys = {
--- 	["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57,
--- 	["~"] = 243, ["1"] = 157, ["2"] = 158, ["3"] = 160, ["4"] = 164, ["5"] = 165, ["6"] = 159, ["7"] = 161, ["8"] = 162, ["9"] = 163, ["-"] = 84, ["="] = 83, ["BACKSPACE"] = 177,
--- 	["TAB"] = 37, ["Q"] = 44, ["W"] = 32, ["E"] = 38, ["R"] = 45, ["T"] = 245, ["Y"] = 246, ["U"] = 303, ["P"] = 199, ["["] = 39, ["]"] = 40, ["ENTER"] = 18,
--- 	["CAPS"] = 137, ["A"] = 34, ["S"] = 8, ["D"] = 9, ["F"] = 23, ["G"] = 47, ["H"] = 74, ["K"] = 311, ["L"] = 182,
--- 	["LEFTSHIFT"] = 21, ["Z"] = 20, ["X"] = 73, ["C"] = 26, ["V"] = 0, ["B"] = 29, ["N"] = 249, ["M"] = 244, [","] = 82, ["."] = 81,
--- 	["LEFTCTRL"] = 36, ["LEFTALT"] = 19, ["SPACE"] = 22, ["RIGHTCTRL"] = 70,
--- 	["HOME"] = 213, ["PAGEUP"] = 10, ["PAGEDOWN"] = 11, ["DELETE"] = 178,
--- 	["LEFT"] = 174, ["RIGHT"] = 175, ["TOP"] = 27, ["DOWN"] = 173,
--- 	["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
--- } 
--- i'll usually delete this and hardcode the values in, but it's super handy for reference.
 local isReady = false
 local Depot = {}
 local Driver = {}
@@ -46,7 +34,7 @@ function addBusPZones(depot, radius, useZ, debug, options)
         name=depot.name,
         useZ=useZ,
         data=depot,
-        debugPoly=debug
+        debugPoly=false
     }))    
 end
 --
@@ -88,11 +76,8 @@ function spawnBusAtDepot(busmodel, x, y, z, heading, driverPed, route, cb)
 		SetNetworkIdCanMigrate(id, true)
 		SetEntityAsMissionEntity(vehicle, true, false)
 		SetVehicleHasBeenOwnedByPlayer(vehicle, false)
+        SetEntityInvincible(vehicle, true)
 		SetVehicleNeedsToBeHotwired(vehicle, false)
-        --
-        -- SetVehicleExclusiveDriver(vehicle, driverPed)
-        -- SetVehicleExclusiveDriver_2(vehicle, driverPed)
-        --
 		SetModelAsNoLongerNeeded(model)
 		RequestCollisionAtCoord(x, y, z)
 		while not HasCollisionLoadedAroundEntity(vehicle) do
@@ -100,16 +85,6 @@ function spawnBusAtDepot(busmodel, x, y, z, heading, driverPed, route, cb)
 			Citizen.Wait(0)
 		end
 		SetVehRadioStation(vehicle, 'OFF')
-        -- -- add bus blip
-        -- BusBlip[vehicle] = AddBlipForEntity(vehicle)
-        -- SetBlipSprite (BusBlip[vehicle], 513)
-        -- SetBlipDisplay(BusBlip[vehicle], 4)
-        -- SetBlipScale  (BusBlip[vehicle], 0.8)
-        -- SetBlipColour (BusBlip[vehicle], 3)
-        -- SetBlipAsShortRange(BusBlip[vehicle], true)
-        -- BeginTextCommandSetBlipName("STRING")
-        -- AddTextComponentString('Bus')
-        -- EndTextCommandSetBlipName(BusBlip[vehicle])
 		if cb ~= nil then
 			cb(vehicle)
 		end
@@ -149,9 +124,9 @@ RegisterNetEvent('bdm:updatedepot')
 AddEventHandler('bdm:updatedepot', function(depot)
     Depot = depot
     for i=1, #depot do
-        addBusPZones(depot[i], 1.0, false, true, {})
+        addBusPZones(depot[i], 2.0, false, true, {})
     end    
-    DepotPolyList = ComboZone:Create(pZones, {name="DepotPolyList", debugPoly=true})
+    DepotPolyList = ComboZone:Create(pZones, {name="DepotPolyList", debugPoly=false})
     DepotPolyList:onPlayerInOut(function(isPointInside, point, zone)
         if zone then
             if isPointInside then
@@ -188,8 +163,7 @@ AddEventHandler('bdm:beginroute', function(busData)
         local drivenbus = spawnBusAtDepot('coach', zData.zones.departure.x, zData.zones.departure.y, zData.zones.departure.z, zData.zones.departure.h, pData, 1, function(bData)
             activeBus = bData
             activeDriver = pData
-            activeDepot = dData
-            print('[Route] '..dData.uid..' [driver] '..pData..' [bus] '..bData)                        
+            activeDepot = dData                  
             SetPedIntoVehicle(pData, bData, -1)
             SetVehicleIsConsideredByPlayer(bData, false)
             SetPedCanBeDraggedOut(pData, false)
@@ -231,7 +205,6 @@ Citizen.CreateThread(function()
         if activeBus ~= nil then
             local buscoords = GetEntityCoords(activeBus)
             local distancetostop = GetDistanceBetweenCoords(buscoords[1], buscoords[2], buscoords[3], activeDepot.zones.recieving.x, activeDepot.zones.recieving.y, activeDepot.zones.recieving.z, false)
-            -- local busseats = GetVehicleModelNumberOfSeats(GetEntityModel(activeBus))
             if activeState == nil  then
                 TaskVehicleTempAction(activeDriver, activeBus, 6, 2000)
                 SetVehicleHandbrake(activeBus, true)
@@ -239,33 +212,25 @@ Citizen.CreateThread(function()
             else
                 SetVehicleHandbrake(activeBus, false)
                 if distancetostop <= 120.0 then
-                    if distancetostop >= 119.0 then                         
-                    -- TaskVehicleTempAction(activeDriver, activeBus, 1)
-                        -- print('slowing speedlr')
+                    if distancetostop >= 119.0 then
                         TaskVehicleDriveToCoordLongrange(activeDriver, activeBus, activeDepot.zones.recieving.x, activeDepot.zones.recieving.y, activeDepot.zones.recieving.z, 12.5, 411, 5.0)
                         SetPedKeepTask(activeDriver, true)
                     end
                 end
                 if distancetostop <= 75.0 then
-                    if distancetostop >= 74.0 then                         
-                    -- TaskVehicleTempAction(activeDriver, activeBus, 1)
-                        -- print('slowing speedmr')
+                    if distancetostop >= 74.0 then
                         TaskVehicleDriveToCoordLongrange(activeDriver, activeBus, activeDepot.zones.recieving.x, activeDepot.zones.recieving.y, activeDepot.zones.recieving.z, 10.0, 411, 5.0)
                         SetPedKeepTask(activeDriver, true)
                     end
                 end
                 if distancetostop <= 50.0 then
-                    if distancetostop >= 49.0 then                         
-                    -- TaskVehicleTempAction(activeDriver, activeBus, 1)
-                        -- print('slowing speedsr')
+                    if distancetostop >= 49.0 then 
                         TaskVehicleDriveToCoordLongrange(activeDriver, activeBus, activeDepot.zones.recieving.x, activeDepot.zones.recieving.y, activeDepot.zones.recieving.z, 7.5, 411, 5.0)
                         SetPedKeepTask(activeDriver, true)
                     end
                 end
                 if distancetostop <= 30.0 then
-                    if distancetostop >= 29.0 then                         
-                    -- TaskVehicleTempAction(activeDriver, activeBus, 1)
-                        -- print('slowing speedsr')
+                    if distancetostop >= 29.0 then 
                         TaskVehicleDriveToCoordLongrange(activeDriver, activeBus, activeDepot.zones.recieving.x, activeDepot.zones.recieving.y, activeDepot.zones.recieving.z, 5.0, 411, 5.0)
                         SetPedKeepTask(activeDriver, true)
                     end
