@@ -4,8 +4,8 @@
 Cfx/FiveM Mod : AI Bus Transportation.
   
 ### Dependancies  
-1. [PolyZone](https://github.com/mkafrin/PolyZone)  
-^^^^ Mad props.... this script is awesome... ^^^^
+1. [PolyZone](https://github.com/mkafrin/PolyZone) - https://github.com/mkafrin/PolyZone   
+^^^^ Mad props.... this script is awesome...   
 
 ### Usage  
 1. install and run. no setup needed!
