@@ -7,7 +7,7 @@ $(function(){
         if(task.zone){ 
             // console.log('ZONE',task.zone.uid)            
             // redraw the menu
-            $('#bdmMenu').append('<h2>Where do you want to go?</h2>');            
+            $('#bdmMenu').append(`<h2>Welcome to ${task.zone.name}! Pick a Destination</h2>`);            
             for(_d in task.depots){
                 // console.log('DEPOT',task.depots[_d].uid)
                 let boop =  task.depots[_d];

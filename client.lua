@@ -1,14 +1,18 @@
 local isReady = false
+local polydebug = false
 local Depot = {}
 local Driver = {}
 local Blip = {}
 local BusBlip = {}
 local pZones = {}
+local PassengerZones = {}
+local signObjs = {}
 
 local DepotPolyList = nil
 local currentZone = nil
 local currentRoutes = nil
 local pedGroup = nil
+local drivingStyle = 411
 activeDepot = nil
 activeBus = nil
 activeDriver = nil
@@ -28,13 +32,12 @@ function draw2screen(text, r, g, b, a, x, y, scale)
     EndTextCommandDisplayText(x, y)
 end
 --
-function addBusPZones(depot, radius, useZ, debug, options)    
-    print('zone ['..depot.name..'] Initiating')  
+function addBusPZones(depot, radius, useZ, debug, options)
     table.insert(pZones, CircleZone:Create(vector3(depot.zones.menu.x, depot.zones.menu.y, depot.zones.menu.z), radius, {
         name=depot.name,
         useZ=useZ,
         data=depot,
-        debugPoly=false
+        debugPoly=polydebug
     }))    
 end
 --
@@ -51,8 +54,12 @@ function spawnBusDriver(Depot, cb)
         while not HasModelLoaded(GetHashKey('u_m_m_promourn_01')) do
             Wait(1)
         end
-        local npc = CreatePed(5, 'u_m_m_promourn_01', Depot.zones.departure.x, Depot.zones.departure.y, Depot.zones.departure.z, 0.0, true, false)
-        SetEntityInvincible(npc, true)
+        local npc = CreatePed(5, 'u_m_m_promourn_01', Depot.zones.menu.x+1.0, Depot.zones.menu.y, Depot.zones.menu.z, 0.0, true, false)
+        SetEntityInvincible(npc, true)        
+        SetDriverAbility(npc, 1.0)
+        SetDriverAggressiveness(npc, 0.0)
+        SetPedCanBeDraggedOut(pData, false)
+        SetPedStayInVehicleWhenJacked(pData, true)
         SetBlockingOfNonTemporaryEvents(npc, false)
         SetPedCanPlayAmbientAnims(npc, true)
         SetPedRelationshipGroupDefaultHash(npc, pedGroup)
@@ -76,6 +83,7 @@ function spawnBusAtDepot(busmodel, x, y, z, heading, driverPed, route, cb)
 		SetNetworkIdCanMigrate(id, true)
 		SetEntityAsMissionEntity(vehicle, true, false)
 		SetVehicleHasBeenOwnedByPlayer(vehicle, false)
+        SetDisableVehicleWindowCollisions(vehicle, false)
         SetEntityInvincible(vehicle, true)
 		SetVehicleNeedsToBeHotwired(vehicle, false)
 		SetModelAsNoLongerNeeded(model)
@@ -114,7 +122,26 @@ function DeleteBusAndDriver(vehicle, driver)
 	end
     activeState = nil
 end
+function putplayerinseat(busid)    
+    local numPass = GetVehicleMaxNumberOfPassengers(busid) - 1 
+    for j=-1, numPass do
+        local isfree = IsVehicleSeatFree(busid, j)        
+        if isfree == 1 then
+            local playerPed = PlayerPedId()
+            TaskEnterVehicle(playerPed, busid, 15000, j, 2.0, 1, 0)
+            break
+        end        
+    end
+end
 -- NET HANDLERS
+AddEventHandler("onResourceStop", function(resourceName)
+    if GetCurrentResourceName() == resourceName then
+        DeleteBusAndDriver(activeBus, activeDriver)
+        for j=1, #signObjs do
+            DeleteObject(signObjs[j])        
+        end
+    end
+end)
 RegisterNetEvent('bdm:errormsg')
 AddEventHandler('bdm:errormsg', function(errormsg)	
     print(errormsg)    
@@ -123,10 +150,14 @@ end)
 RegisterNetEvent('bdm:updatedepot')
 AddEventHandler('bdm:updatedepot', function(depot)
     Depot = depot
+    for j=1, #signObjs do
+        DeleteObject(signObjs[j])        
+    end
     for i=1, #depot do
         addBusPZones(depot[i], 2.0, false, true, {})
+        signObjs[Depot[i].uid] = CreateObject(-1022684418, Depot[i].zones.menu.x, Depot[i].zones.menu.y, Depot[i].zones.menu.z, false, false, false)
     end    
-    DepotPolyList = ComboZone:Create(pZones, {name="DepotPolyList", debugPoly=false})
+    DepotPolyList = ComboZone:Create(pZones, {name="DepotPolyList", debugPoly=polydebug})
     DepotPolyList:onPlayerInOut(function(isPointInside, point, zone)
         if zone then
             if isPointInside then
@@ -150,7 +181,39 @@ end)
 RegisterNetEvent('bdm:updatedriver')
 AddEventHandler('bdm:updatedriver', function(driver)
 	Driver = driver
-    print('Bus Driver List Updated')
+end)
+--
+RegisterNetEvent('bdm:makeclientpass')
+AddEventHandler('bdm:makeclientpass', function(bId)
+    local buspass = NetworkGetEntityFromNetworkId(bId[2]) 
+    SetVehicleIsConsideredByPlayer(buspass, false)
+    local pCoords = vector3(bId[3].zones.passenger.x, bId[3].zones.passenger.y, bId[3].zones.passenger.z)
+    PassengerZones[buspass] = CircleZone:Create(pCoords, 1.0, {
+        name="passengerZone",
+        useZ=false,
+        debugPoly=polydebug
+    })
+    PassengerZones[buspass]:onPlayerInOut(function(isPointInside, point, zone)
+        if isPointInside then
+            putplayerinseat(buspass)
+        end
+    end)	
+end)
+--
+RegisterNetEvent('bdm:delclientpass')
+AddEventHandler('bdm:delclientpass', function(bId)    
+    local buspass = NetworkGetEntityFromNetworkId(bId[2])  
+    PassengerZones[buspass]:destroy()
+end)
+--
+RegisterNetEvent('bdm:oob')
+AddEventHandler('bdm:oob', function(bId) 
+    local playerPed = PlayerPedId()
+    local isinbus = GetVehiclePedIsIn(playerPed, false)
+    local buspass = NetworkGetEntityFromNetworkId(bId[2]) 
+    if isinbus == buspass then
+        TaskLeaveVehicle(playerPed, buspass, 512)
+    end
 end)
 --
 RegisterNetEvent('bdm:beginroute')
@@ -158,24 +221,31 @@ AddEventHandler('bdm:beginroute', function(busData)
     local zData = busData[1]
     local dData = busData[2]
     if activeBus then DeleteBusAndDriver(activeBus, activeDriver) end
+    --
     Citizen.Wait(100)
     local busdriver = spawnBusDriver(zData, function(pData)
         local drivenbus = spawnBusAtDepot('coach', zData.zones.departure.x, zData.zones.departure.y, zData.zones.departure.z, zData.zones.departure.h, pData, 1, function(bData)
             activeBus = bData
             activeDriver = pData
-            activeDepot = dData                  
-            SetPedIntoVehicle(pData, bData, -1)
-            SetVehicleIsConsideredByPlayer(bData, false)
-            SetPedCanBeDraggedOut(pData, false)
-            SetPedStayInVehicleWhenJacked(pData, true)
-            local playerPed = PlayerPedId()
-            SetPedIntoVehicle(playerPed, bData, 0)
-            activeState = 1
-            Citizen.Wait(100)
-            TaskVehicleDriveToCoordLongrange(activeDriver, activeBus, dData.zones.recieving.x, dData.zones.recieving.y, dData.zones.recieving.z, 15.0, 411, 5.0)
-            SetPedKeepTask(activeDriver, true)
+            activeDepot = dData     
+            SetPedIntoVehicle(activeDriver, activeBus, -1) 
         end)
     end)
+    --
+    Citizen.Wait(100)
+    -----------------------------------------------------
+    local netid = NetworkGetNetworkIdFromEntity(activeBus) 
+    TriggerServerEvent('bdm:makepass', {activeBus,netid,zData})  
+    Citizen.Wait(60000)
+    TriggerServerEvent('bdm:delpass', {activeBus,netid})
+    Citizen.Wait(1000)
+    for i = 0, 5 do
+        SetVehicleDoorShut(activeBus, i, false)
+    end
+    activeState = 1
+    TaskVehicleDriveToCoordLongrange(activeDriver, activeBus, dData.zones.recieving.x, dData.zones.recieving.y, dData.zones.recieving.z, 15.0, drivingStyle, 5.0)
+    SetPedKeepTask(activeDriver, true)
+    ----------------------------------------------------
 end)
 --
 Citizen.CreateThread(function()
@@ -203,6 +273,11 @@ Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
         if activeBus ~= nil then
+
+            if IsVehicleStuckOnRoof(activeBus) or IsEntityUpsidedown(activeBus) or IsEntityDead(activeDriver) or IsEntityDead(activeBus) then
+                DeleteBusAndDriver(activeBus, activeDriver)  
+            end
+
             local buscoords = GetEntityCoords(activeBus)
             local distancetostop = GetDistanceBetweenCoords(buscoords[1], buscoords[2], buscoords[3], activeDepot.zones.recieving.x, activeDepot.zones.recieving.y, activeDepot.zones.recieving.z, false)
             if activeState == nil  then
@@ -211,39 +286,39 @@ Citizen.CreateThread(function()
                 SetVehicleEngineOn(activeBus, true, true, false)
             else
                 SetVehicleHandbrake(activeBus, false)
-                if distancetostop <= 120.0 then
-                    if distancetostop >= 119.0 then
-                        TaskVehicleDriveToCoordLongrange(activeDriver, activeBus, activeDepot.zones.recieving.x, activeDepot.zones.recieving.y, activeDepot.zones.recieving.z, 12.5, 411, 5.0)
+                if distancetostop <= 100.0 then
+                    if distancetostop >= 99.0 then
+                        TaskVehicleDriveToCoordLongrange(activeDriver, activeBus, activeDepot.zones.recieving.x, activeDepot.zones.recieving.y, activeDepot.zones.recieving.z, 12.5, drivingStyle, 5.0)
                         SetPedKeepTask(activeDriver, true)
                     end
                 end
                 if distancetostop <= 75.0 then
                     if distancetostop >= 74.0 then
-                        TaskVehicleDriveToCoordLongrange(activeDriver, activeBus, activeDepot.zones.recieving.x, activeDepot.zones.recieving.y, activeDepot.zones.recieving.z, 10.0, 411, 5.0)
+                        TaskVehicleDriveToCoordLongrange(activeDriver, activeBus, activeDepot.zones.recieving.x, activeDepot.zones.recieving.y, activeDepot.zones.recieving.z, 10.0, drivingStyle, 5.0)
                         SetPedKeepTask(activeDriver, true)
                     end
                 end
                 if distancetostop <= 50.0 then
                     if distancetostop >= 49.0 then 
-                        TaskVehicleDriveToCoordLongrange(activeDriver, activeBus, activeDepot.zones.recieving.x, activeDepot.zones.recieving.y, activeDepot.zones.recieving.z, 7.5, 411, 5.0)
+                        TaskVehicleDriveToCoordLongrange(activeDriver, activeBus, activeDepot.zones.recieving.x, activeDepot.zones.recieving.y, activeDepot.zones.recieving.z, 7.5, drivingStyle, 5.0)
                         SetPedKeepTask(activeDriver, true)
                     end
                 end
                 if distancetostop <= 30.0 then
                     if distancetostop >= 29.0 then 
-                        TaskVehicleDriveToCoordLongrange(activeDriver, activeBus, activeDepot.zones.recieving.x, activeDepot.zones.recieving.y, activeDepot.zones.recieving.z, 5.0, 411, 5.0)
+                        TaskVehicleDriveToCoordLongrange(activeDriver, activeBus, activeDepot.zones.recieving.x, activeDepot.zones.recieving.y, activeDepot.zones.recieving.z, 5.0, drivingStyle, 5.0)
                         SetPedKeepTask(activeDriver, true)
                     end
                 end
-                if distancetostop <= 15.0 then  
-                    print('brake applied')  
+                if distancetostop <= 15.0 then
                     TaskVehicleTempAction(activeDriver, activeBus, 6, 2000)
                     SetVehicleHandbrake(activeBus, true)
                     SetVehicleEngineOn(activeBus, false, true, false)                    
                     local playerPed = PlayerPedId()    
                     ClearPedTasks(playerPed)
-                    TaskLeaveVehicle(playerPed, activeBus, 512)
-                    Citizen.Wait(5000)
+                    local netid = NetworkGetNetworkIdFromEntity(activeBus)
+                    TriggerServerEvent('bdm:getoutofbus', {activeBus,netid})
+                    Citizen.Wait(15000)
                     DeleteBusAndDriver(activeBus, activeDriver)  
                 end
             end            
@@ -265,11 +340,18 @@ Citizen.CreateThread(function()
 		if NetworkIsPlayerActive(PlayerId()) then
 			TriggerServerEvent('bdm:getlists')
             local v, pedGroup = AddRelationshipGroup('bdmDrivers')  
-            SetRelationshipBetweenGroups(0, GetHashKey("PLAYER"), pedGroup) -- players and bus drivers
-            SetRelationshipBetweenGroups(0, pedGroup, GetHashKey("PLAYER")) -- bus drivers and players    
-            print('Bus Driver<>Player Relationship Set to : '..GetRelationshipBetweenGroups(GetHashKey("PLAYER"), pedGroup))
+            SetRelationshipBetweenGroups(0, GetHashKey("PLAYER"), pedGroup)
+            SetRelationshipBetweenGroups(0, pedGroup, GetHashKey("PLAYER"))
             isReady = true
 			break
 		end
 	end
 end)
+----------------------------------------------------
+RegisterCommand('getgroundz', function(source, args)     
+    local playerPed = PlayerPedId()  
+    local pCoords = GetEntityCoords(playerPed)  
+    local didWork, groundZ  = GetGroundZFor_3dCoord(pCoords[1],pCoords[2],pCoords[3],0)
+    print('x:'..pCoords[1]..' y:'..pCoords[2]..' z:'..pCoords[3])
+    print(groundZ) 
+end,false)

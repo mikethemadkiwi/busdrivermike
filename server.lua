@@ -6,11 +6,11 @@ if BDDB == nil then
     BDDB.Depot = {
         {
             uid = 'city1',
-            name = "Town Hall Transfer",
+            name = "Town Hall",
             aZone = 17,
             zones = {
-                menu = {x = -560.992, y = -174.790, z = 38.104},
-                passenger = {},
+                menu = {x = -560.992, y = -174.790, z = 37.11},
+                passenger = {x = -563.057, y = -165.685, z = 37.096},
                 departure = {x = -568.056, y = -165.575, z = 38.040, h = 289.892},
                 recieving = {x = -569.6, y = -158.8, z = 38.1, h = 289.892}
             },
@@ -18,11 +18,11 @@ if BDDB == nil then
         },
         {
             uid = 'pillhub1',
-            name = "Pillbox Dashound Transfer",
+            name = "Pillbox Dashound",
             aZone = 138,
             zones = {
-                menu = {x = 437.590, y = -624.364, z = 28.708},
-                passenger = {},
+                menu = {x = 457.4, y = -596.9, z = 27.499},
+                passenger = {x = 469.526, y = -611.367, z = 27.499},
                 departure = {x = 471.7, y = -606.8, z = 28.495, h = 174.100},
                 recieving = {x = 442.503, y = -584.429, z = 28.495, h = 259.700}
             },
@@ -30,11 +30,11 @@ if BDDB == nil then
         },
         {
             uid = 'strawb1',
-            name = "Strawberry Metro Transfer",
+            name = "Strawberry Metro",
             aZone = 74,
             zones = {
-                menu = {x = 260.424, y = -1202.279, z = 29.289},
-                passenger = {},
+                menu = {x = 260.424, y = -1202.279, z = 28.288},
+                passenger = {x = 265.424, y = -1185.714, z = 28.537},
                 departure = {x = 270.053, y = -1187.702, z = 29.443, h = 86.426},
                 recieving = {x = 276.4, y = -1217.4, z = 29.443, h = 268.426}
             },
@@ -42,11 +42,11 @@ if BDDB == nil then
         },
         {
             uid = 'casino1',
-            name = "Casino Transfer",
+            name = "Casino",
             aZone = 160,
             zones = {
-                menu = {x = 935.0, y = 147.7, z = 80.8},
-                passenger = {},
+                menu = {x = 935.0, y = 147.7, z = 79.830},
+                passenger = {x = 950.307, y = 148.141, z = 79.830},
                 departure = {x = 946.2, y = 150.9, z = 80.81, h = 256.099},
                 recieving = {x = 960.6, y = 141.1, z = 81.01, h = 334.07}
             },
@@ -54,11 +54,11 @@ if BDDB == nil then
         },
         {
             uid = 'sandy1',
-            name = "Sandy Shores Transfer",
+            name = "Sandy Shores",
             aZone = 233,
             zones = {
-                menu = {x = 1976.2, y = 3718.2, z = 32.0},
-                passenger = {},
+                menu = {x = 1976.2, y = 3718.2, z = 31.019},
+                passenger = {x = 1967.282, y = 3712.100, z = 31.178},
                 departure = {x = 1965.3, y = 3707.5, z = 32.2, h = 356.442},
                 recieving = {x = 1968.5, y = 3728.5, z = 32.4, h = 334.07}
             },
@@ -66,11 +66,11 @@ if BDDB == nil then
         },   
         {
             uid = 'paleto1',
-            name = "Paleto Bay Transfer",
+            name = "Paleto Bay",
             aZone = 213,
             zones = {
-                menu = {x = -276.32, y = 6072.8, z = 31.4},
-                passenger = {},
+                menu = {x = -276.32, y = 6072.8, z = 30.434},
+                passenger = {x = -282.840, y = 6049.770, z = 30.050},
                 departure = {x = -280.5, y = 6045.5, z = 31.5, h = 49.08},
                 recieving = {x = -273.6, y = 6039.8, z = 31.6, h = 334.07}
             },
@@ -78,11 +78,11 @@ if BDDB == nil then
         }, 
         {
             uid = 'greatoceanhwy1',
-            name = "Barbareno Pier Transfer",
+            name = "Barbareno Pier",
             aZone = 661,
             zones = {
-                menu = {x = -3241.2, y = 981.7, z = 12.7},
-                passenger = {},
+                menu = {x = -3241.2, y = 981.7, z = 11.701},
+                passenger = {x = -3241.013, y = 991.709, z = 11.447},
                 departure = {x = -3245.9, y = 992.6, z = 12.6, h = 280.169},
                 recieving = {x = -3230.5, y = 985.3, z = 12.7, h = 334.07}
             },
@@ -93,8 +93,8 @@ if BDDB == nil then
             name = "Del Perro Beach",
             aZone = 680,
             zones = {
-                menu = {x = -1605.8, y = -943.4, z = 13.31},
-                passenger = {},
+                menu = {x = -1605.8, y = -943.4, z = 12.324},
+                passenger = {x = -1610.333, y = -968.929, z = 12.017},
                 departure = {x = -1614.7, y = -971.3, z = 14.41, h = 318.830},
                 recieving = {x = -1598.8, y = -942.1, z = 13.01, h = 332.07}
             },
@@ -102,60 +102,48 @@ if BDDB == nil then
         }, 
         {
             uid = 'harmony1',
-            name = "Harmony (route 68) Transfer",
+            name = "Harmony (route 68)",
             aZone = 256,
             zones = {
-                menu = {x = 652.1, y = 2736.4, z = 41.993},
-                passenger = {},
+                menu = {x = 652.1, y = 2736.4, z = 40.882},
+                passenger = {x = 658.259, y = 2732.425, z = 40.923},
                 departure = {x = 660.3, y = 2736.9, z = 42.01, h = 175.11},
                 recieving = {x = 660.4, y = 2746.4, z = 42.01, h = 332.07}
             },
             blip = {sprite = 58, color = 3, scale = 1.0}
-        }, 
-        {
-            uid = 'arena1',
-            name = "Maze Bank Arena Transfer",
-            aZone = 69,
-            zones = {
-                menu = {x = -130.4, y = -1993.4, z = 22.8},
-                passenger = {},
-                departure = {x = -140.1, y = -1982.7, z = 22.81, h = 91.851},
-                recieving = {x = -152.7, y = -1981.9, z = 22.91, h = 332.07}
-            },
-            blip = {sprite = 58, color = 3, scale = 1.0}
-        }, 
+        },
         {
             uid = 'airport1',
-            name = "Airport Transfer",
+            name = "Airport",
             aZone = 495,
             zones = {
-                menu = {x = -1022.7, y = -2693.0, z = 14.01},
-                passenger = {},
-                departure = {x = -1025.1, y = -2682.8, z = 13.83, h = 147.1},
-                recieving = {x = -1025.1, y = -2682.8, z = 13.83, h = 332.07}
+                menu = {x = -942.011, y = -2565.722, z = 12.960},
+                passenger = {x = -933.263, y = -2560.046, z = 12.959},
+                departure = {x = -930.061, y = -2556.211, z = 14.55, h = 159.9},
+                recieving = {x = -938.7, y = -2547.2, z = 14.55, h = 332.07}
             },
             blip = {sprite = 58, color = 3, scale = 1.0}
         }, 
         {
             uid = 'observ1',
-            name = "Observatory Transfer",
+            name = "Observatory",
             aZone = 184,
             zones = {
-                menu = {x = -413.6, y = 1169.1, z = 323.81},
-                passenger = {},
+                menu = {x = -425.597, y = 1200.817, z = 324.758},
+                passenger = {x = -409.733, y = 1204.272, z = 324.641},
                 departure = {x = -406.9, y = 1208.4, z = 325.63, h = 165.248},
-                recieving = {x = -390.1, y = 1214.1, z = 325.63, h = 332.07}
+                recieving = {x = -407.477, y = 1234.554, z = 325.63, h = 332.07}
             },
             blip = {sprite = 58, color = 3, scale = 1.0}
         }, 
         {
             uid = 'dock1',
-            name = "Industrial Dock Transfer",
+            name = "Industrial Dock",
             aZone = 164,
             zones = {
-                menu = {x = 784.3, y = -2947.8, z = 5.9},
-                passenger = {},
-                departure = {x = 760.9, y = -2948.5, z = 5.83, h = 181.11},
+                menu = {x = 771.983, y = -2991.597, z = 5.020},
+                passenger = {x = 766.092, y = -2996.319, z = 4.863},
+                departure = {x = 769.257, y = -3000.363, z = 5.95, h = 60.108},
                 recieving = {x = 760.9, y = -2948.5, z = 5.85, h = 332.07}
             },
             blip = {sprite = 58, color = 3, scale = 1.0}
@@ -190,6 +178,19 @@ AddEventHandler('bdm:updatedriver', function(driver)
     -- do things
     TriggerClientEvent('bdm:updatedriver', -1, BDDB.Driver)
 end)
+RegisterServerEvent('bdm:makepass')
+AddEventHandler('bdm:makepass', function(bId)
+    TriggerClientEvent('bdm:makeclientpass', -1, bId)
+end)
+RegisterServerEvent('bdm:delpass')
+AddEventHandler('bdm:delpass', function(bId)
+    TriggerClientEvent('bdm:delclientpass', -1, bId)
+end)
+RegisterServerEvent('bdm:getoutofbus')
+AddEventHandler('bdm:getoutofbus', function(bId)
+    print('oob ran')
+    TriggerClientEvent('bdm:oob', -1, bId)
+end)
 RegisterServerEvent('bdm:getlists')
 AddEventHandler('bdm:getlists', function()
     TriggerClientEvent('bdm:updatedepot', source, BDDB.Depot)
@@ -197,9 +198,20 @@ AddEventHandler('bdm:getlists', function()
 end)
 RegisterServerEvent('bdm:requestRoute')
 AddEventHandler('bdm:requestRoute', function(zone)
-    -- local now = date
     local inZone = zone["in"]
     local outZone = zone["out"]
-    print('Route: '..outZone.name..' Requested by '..GetPlayerName(source)..' from Zone: '..inZone.name)
-    TriggerClientEvent('bdm:beginroute', source, {inZone, outZone})
+    if depotLock[inZone.uid] ~= nil then
+        print(depotLock[inZone.uid])
+        if GetGameTimer() >= depotLock[inZone.uid] then
+            print('Route: '..outZone.name..' Requested by '..GetPlayerName(source)..' from Zone: '..inZone.name)
+            TriggerClientEvent('bdm:beginroute', source, {inZone, outZone})
+        else            
+            print('Route: '..outZone.name..' Request FAILED '..GetPlayerName(source)..' from Zone: '..inZone.name)
+            TriggerClientEvent('bdm:errormsg', source, 'Transfer Used Too Recently!')
+        end
+    else
+        depotLock[inZone.uid] = GetGameTimer() + 120000
+        print('Route: '..outZone.name..' Requested by '..GetPlayerName(source)..' from Zone: '..inZone.name)
+        TriggerClientEvent('bdm:beginroute', source, {inZone, outZone})
+    end
 end)
