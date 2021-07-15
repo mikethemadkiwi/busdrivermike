@@ -16,6 +16,5 @@ nothing flashy atm cos i havent played with ai yet or timings etc. next version 
 1. The god awful AI. it's not TERRIBLE. but it's not great either.   
 2. the bus stops. departures arent bad, but the stops are janky.   
 3. the way locations are handled. i'd LIKE to tie them to actual bus stops. but again... Dat AI y'all.   
-4. Multiple players on a single bus instead of multiple buses for multiple players. ( i know how to do it, just got lazy )   
 
 ### V2 Coming Soon...
