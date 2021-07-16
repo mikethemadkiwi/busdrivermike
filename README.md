@@ -17,4 +17,4 @@ nothing flashy atm cos i havent played with ai yet or timings etc. next version 
 2. the bus stops. departures arent bad, but the stops are janky.   
 3. the way locations are handled. i'd LIKE to tie them to actual bus stops. but again... Dat AI y'all.   
 
-### V2 Coming Soon...
+### [Video Showcase](https://youtu.be/J1AlGcMldQI)
