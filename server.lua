@@ -188,7 +188,6 @@ AddEventHandler('bdm:delpass', function(bId)
 end)
 RegisterServerEvent('bdm:getoutofbus')
 AddEventHandler('bdm:getoutofbus', function(bId)
-    print('oob ran')
     TriggerClientEvent('bdm:oob', -1, bId)
 end)
 RegisterServerEvent('bdm:getlists')
@@ -201,13 +200,12 @@ AddEventHandler('bdm:requestRoute', function(zone)
     local inZone = zone["in"]
     local outZone = zone["out"]
     if depotLock[inZone.uid] ~= nil then
-        print(depotLock[inZone.uid])
         if GetGameTimer() >= depotLock[inZone.uid] then
             print('Route: '..outZone.name..' Requested by '..GetPlayerName(source)..' from Zone: '..inZone.name)
             TriggerClientEvent('bdm:beginroute', source, {inZone, outZone})
         else            
             print('Route: '..outZone.name..' Request FAILED '..GetPlayerName(source)..' from Zone: '..inZone.name)
-            TriggerClientEvent('bdm:errormsg', source, 'Transfer Used Too Recently!')
+            TriggerClientEvent('bdm:errormsg', source, 'Transfer Used Too Recently! Please Wait!')
         end
     else
         depotLock[inZone.uid] = GetGameTimer() + 120000
