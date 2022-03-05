@@ -197,6 +197,8 @@ AddEventHandler('bdm:getlists', function()
     TriggerClientEvent('bdm:updatedepot', source, BDDB.Depot)
     TriggerClientEvent('bdm:updatedriver', source, BDDB.Driver)
 end)
+
+
 RegisterServerEvent('bdm:requestRoute')
 AddEventHandler('bdm:requestRoute', function(zone)
     local inZone = zone["in"]
@@ -210,7 +212,7 @@ AddEventHandler('bdm:requestRoute', function(zone)
             TriggerClientEvent('bdm:errormsg', source, 'Transfer Used Too Recently! Please Wait!')
         end
     else
-        depotLock[inZone.uid] = GetGameTimer() + 120000
+        depotLock[inZone.uid] = GetGameTimer() + 60000
         print('Route: '..outZone.name..' Requested by '..GetPlayerName(source)..' from Zone: '..inZone.name)
         TriggerClientEvent('bdm:beginroute', source, {inZone, outZone})
     end
