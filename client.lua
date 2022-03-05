@@ -1,5 +1,5 @@
 local isReady = false
-local polydebug = false
+local polydebug = true
 local Depot = {}
 local Driver = {}
 local Blip = {}
