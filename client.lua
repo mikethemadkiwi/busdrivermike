@@ -236,26 +236,24 @@ AddEventHandler('bdm:beginroute', function(busData)
     --
     Citizen.Wait(100)
     local busdriver = spawnBusDriver(zData, function(pData)
-        
-    end)
-    Citizen.Wait(100)
-    local drivenbus = spawnBusAtDepot('coach', zData.zones.departure.x, zData.zones.departure.y, zData.zones.departure.z, zData.zones.departure.h, pData, 1, function(bData)
-        SetPedIntoVehicle(activeDriver, activeBus, -1) 
+        Citizen.Wait(100)
+        local drivenbus = spawnBusAtDepot('coach', zData.zones.departure.x, zData.zones.departure.y, zData.zones.departure.z, zData.zones.departure.h, pData, 1, function(bData)
+            SetPedIntoVehicle(activeDriver, activeBus, -1)            
+            -----------------------------------------------------
+            TriggerServerEvent('bdm:makepass', {activeBus,activeBusNetId,zData})  
+            Citizen.Wait(60000)
+            TriggerServerEvent('bdm:delpass', {activeBus,activeBusNetId})
+            Citizen.Wait(1000)
+            for i = 0, 5 do
+                SetVehicleDoorShut(activeBus, i, false)
+            end
+            activeState = 1
+            TaskVehicleDriveToCoordLongrange(activeDriver, activeBus, activeDepot.zones.recieving.x, activeDepot.zones.recieving.y, activeDepot.zones.recieving.z, 15.0, drivingStyle, 5.0)
+            SetPedKeepTask(activeDriver, true)
+            ---------------------------------------------------- 
+        end)
     end)
     --
-    Citizen.Wait(1000)
-    -----------------------------------------------------
-    TriggerServerEvent('bdm:makepass', {activeBus,activeBusNetId,zData})  
-    Citizen.Wait(60000)
-    TriggerServerEvent('bdm:delpass', {activeBus,activeBusNetId})
-    Citizen.Wait(1000)
-    for i = 0, 5 do
-        SetVehicleDoorShut(activeBus, i, false)
-    end
-    activeState = 1
-    TaskVehicleDriveToCoordLongrange(activeDriver, activeBus, dData.zones.recieving.x, dData.zones.recieving.y, dData.zones.recieving.z, 15.0, drivingStyle, 5.0)
-    SetPedKeepTask(activeDriver, true)
-    ----------------------------------------------------
 end)
 --
 Citizen.CreateThread(function()
