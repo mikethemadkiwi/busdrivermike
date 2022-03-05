@@ -232,7 +232,7 @@ RegisterNetEvent('bdm:beginroute')
 AddEventHandler('bdm:beginroute', function(busData) 
     local zData = busData[1]
     activeDepot = busData[2]
-    if activeBus != nil then DeleteBusAndDriver(activeBus, activeDriver) end
+    -- if activeBus != nil then DeleteBusAndDriver(activeBus, activeDriver) end
     --
     Citizen.Wait(100)
     local busdriver = spawnBusDriver(zData, function(pData)
