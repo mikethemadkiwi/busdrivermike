@@ -55,6 +55,9 @@ function spawnBusDriver(Depot, cb)
             Wait(1)
         end
         local npc = CreatePed(5, 'u_m_m_promourn_01', Depot.zones.menu.x+1.0, Depot.zones.menu.y, Depot.zones.menu.z, 0.0, true, false)
+        
+        print('driver spawn:'.. npc .. '')
+
         SetEntityInvincible(npc, true)        
         SetDriverAbility(npc, 1.0)
         SetDriverAggressiveness(npc, 0.0)
@@ -80,6 +83,9 @@ function spawnBusAtDepot(busmodel, x, y, z, heading, driverPed, route, cb)
 		end
 		local vehicle = CreateVehicle(model, x, y, z, heading, true, false)
 		local id      = NetworkGetNetworkIdFromEntity(vehicle)
+
+        print('bus spawn:'.. vehicle .. ' netid: '.. id ..'')
+
 		SetNetworkIdCanMigrate(id, true)
 		SetEntityAsMissionEntity(vehicle, true, false)
 		SetVehicleHasBeenOwnedByPlayer(vehicle, false)
@@ -186,9 +192,11 @@ end)
 RegisterNetEvent('bdm:makeclientpass')
 AddEventHandler('bdm:makeclientpass', function(bId)
     local buspass = NetworkGetEntityFromNetworkId(bId[2]) 
+
     print(buspass) 
     print(bId[1]) 
     print(bId[2])
+
     SetVehicleIsConsideredByPlayer(buspass, false)
     local pCoords = vector3(bId[3].zones.passenger.x, bId[3].zones.passenger.y, bId[3].zones.passenger.z)
     PassengerZones[buspass] = CircleZone:Create(pCoords, 1.0, {
