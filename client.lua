@@ -236,12 +236,14 @@ AddEventHandler('bdm:beginroute', function(busData)
     --
     Citizen.Wait(100)
     local busdriver = spawnBusDriver(zData, function(pData)
-        local drivenbus = spawnBusAtDepot('coach', zData.zones.departure.x, zData.zones.departure.y, zData.zones.departure.z, zData.zones.departure.h, pData, 1, function(bData)
-           SetPedIntoVehicle(activeDriver, activeBus, -1) 
-        end)
+        
+    end)
+    Citizen.Wait(100)
+    local drivenbus = spawnBusAtDepot('coach', zData.zones.departure.x, zData.zones.departure.y, zData.zones.departure.z, zData.zones.departure.h, pData, 1, function(bData)
+        SetPedIntoVehicle(activeDriver, activeBus, -1) 
     end)
     --
-    Citizen.Wait(100)
+    Citizen.Wait(1000)
     -----------------------------------------------------
     TriggerServerEvent('bdm:makepass', {activeBus,activeBusNetId,zData})  
     Citizen.Wait(60000)
