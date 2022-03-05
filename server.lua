@@ -196,8 +196,10 @@ AddEventHandler('bdm:getlists', function()
     TriggerClientEvent('bdm:updatedepot', source, BDDB.Depot)
     TriggerClientEvent('bdm:updatedriver', source, BDDB.Driver)
 end)
-
-
+RegisterServerEvent('bdm:passentered')
+AddEventHandler('bdm:passentered', function(bId)
+    print('['.. source ..'] entered BusId:'.. bId[1] ..'')
+end)
 RegisterServerEvent('bdm:requestRoute')
 AddEventHandler('bdm:requestRoute', function(zone)
     local inZone = zone["in"]
