@@ -7,7 +7,6 @@ local BusBlip = {}
 local pZones = {}
 local PassengerZones = {}
 local signObjs = {}
-
 local DepotPolyList = nil
 local currentZone = nil
 local currentRoutes = nil
@@ -192,12 +191,7 @@ end)
 --
 RegisterNetEvent('bdm:makeclientpass')
 AddEventHandler('bdm:makeclientpass', function(bId)
-    local buspass = NetworkGetEntityFromNetworkId(bId[2]) 
-
-    print(buspass) 
-    print(bId[1]) 
-    print(bId[2])
-
+    local buspass = NetworkGetEntityFromNetworkId(bId[2])
     SetVehicleIsConsideredByPlayer(buspass, false)
     local pCoords = vector3(bId[3].zones.passenger.x, bId[3].zones.passenger.y, bId[3].zones.passenger.z)
     PassengerZones[buspass] = CircleZone:Create(pCoords, 1.0, {
