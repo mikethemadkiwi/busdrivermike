@@ -213,7 +213,7 @@ AddEventHandler('bdm:requestRoute', function(zone)
             TriggerClientEvent('bdm:errormsg', source, 'Transfer Used Too Recently! Please Wait!')
         end
     else
-        depotLock[inZone.uid] = GetGameTimer() + 60000
+        depotLock[inZone.uid] = GetGameTimer() + 120000
         print('Route: '..outZone.name..' Requested by '..GetPlayerName(source)..' from Zone: '..inZone.name)
         TriggerClientEvent('bdm:beginroute', source, {inZone, outZone})
     end
