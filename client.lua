@@ -15,6 +15,7 @@ local pedGroup = nil
 local drivingStyle = 411
 activeDepot = nil
 activeBus = nil
+activeBusNetId = nil
 activeDriver = nil
 activeState = nil
 --
@@ -54,23 +55,23 @@ function spawnBusDriver(Depot, cb)
         while not HasModelLoaded(GetHashKey('u_m_m_promourn_01')) do
             Wait(1)
         end
-        local npc = CreatePed(5, 'u_m_m_promourn_01', Depot.zones.menu.x+1.0, Depot.zones.menu.y, Depot.zones.menu.z, 0.0, true, false)
-        
-        print('driver spawn:'.. npc .. '')
+        activeDriver = CreatePed(5, 'u_m_m_promourn_01', Depot.zones.menu.x+1.0, Depot.zones.menu.y, Depot.zones.menu.z, 0.0, true, false)        
+        SetEntityInvincible(activeDriver, true)        
+        SetDriverAbility(activeDriver, 1.0)
+        SetDriverAggressiveness(activeDriver, 0.0)
+        SetPedCanBeDraggedOut(activeDriver, false)
+        SetPedStayInVehicleWhenJacked(activeDriver, true)
+        SetBlockingOfNonTemporaryEvents(activeDriver, false)
+        SetPedCanPlayAmbientAnims(activeDriver, true)
+        SetPedRelationshipGroupDefaultHash(activeDriver, pedGroup)
+        SetPedRelationshipGroupHash(activeDriver, pedGroup)
+        SetCanAttackFriendly(activeDriver, false, false)
+        SetPedCombatMovement(activeDriver, 0)
 
-        SetEntityInvincible(npc, true)        
-        SetDriverAbility(npc, 1.0)
-        SetDriverAggressiveness(npc, 0.0)
-        SetPedCanBeDraggedOut(npc, false)
-        SetPedStayInVehicleWhenJacked(npc, true)
-        SetBlockingOfNonTemporaryEvents(npc, false)
-        SetPedCanPlayAmbientAnims(npc, true)
-        SetPedRelationshipGroupDefaultHash(npc, pedGroup)
-        SetPedRelationshipGroupHash(npc, pedGroup)
-        SetCanAttackFriendly(npc, false, false)
-        SetPedCombatMovement(npc, 0)
+        print('driver spawn:'.. activeDriver .. '')
+
         if cb ~= nil then
-			cb(npc)
+			cb(activeDriver)
 		end
     end)
 end
@@ -81,26 +82,26 @@ function spawnBusAtDepot(busmodel, x, y, z, heading, driverPed, route, cb)
 		while not HasModelLoaded(model) do
 			Citizen.Wait(0)
 		end
-		local vehicle = CreateVehicle(model, x, y, z, heading, true, false)
-		local id      = NetworkGetNetworkIdFromEntity(vehicle)
-
-        print('bus spawn:'.. vehicle .. ' netid: '.. id ..'')
-
-		SetNetworkIdCanMigrate(id, true)
-		SetEntityAsMissionEntity(vehicle, true, false)
-		SetVehicleHasBeenOwnedByPlayer(vehicle, false)
-        SetDisableVehicleWindowCollisions(vehicle, false)
-        SetEntityInvincible(vehicle, true)
-		SetVehicleNeedsToBeHotwired(vehicle, false)
+		activeBus = CreateVehicle(model, x, y, z, heading, true, false)
+		activeBusNetId      = NetworkGetNetworkIdFromEntity(activeBus)
+		SetNetworkIdCanMigrate(activeBusNetId, true)
+		SetEntityAsMissionEntity(activeBus, true, false)
+		SetVehicleHasBeenOwnedByPlayer(activeBus, false)
+        SetDisableVehicleWindowCollisions(activeBus, false)
+        SetEntityInvincible(activeBus, true)
+		SetVehicleNeedsToBeHotwired(activeBus, false)
 		SetModelAsNoLongerNeeded(model)
 		RequestCollisionAtCoord(x, y, z)
-		while not HasCollisionLoadedAroundEntity(vehicle) do
+		while not HasCollisionLoadedAroundEntity(activeBus) do
 			RequestCollisionAtCoord(x, y, z)
 			Citizen.Wait(0)
 		end
-		SetVehRadioStation(vehicle, 'OFF')
+		SetVehRadioStation(activeBus, 'OFF')
+
+        print('bus spawn:'.. activeBus .. ' netid: '.. activeBusNetId ..'')
+
 		if cb ~= nil then
-			cb(vehicle)
+			cb(activeBus)
 		end
 	end)
 end
@@ -230,25 +231,21 @@ end)
 RegisterNetEvent('bdm:beginroute')
 AddEventHandler('bdm:beginroute', function(busData) 
     local zData = busData[1]
-    local dData = busData[2]
-    if activeBus then DeleteBusAndDriver(activeBus, activeDriver) end
+    activeDepot = busData[2]
+    if activeBus != nil then DeleteBusAndDriver(activeBus, activeDriver) end
     --
     Citizen.Wait(100)
     local busdriver = spawnBusDriver(zData, function(pData)
         local drivenbus = spawnBusAtDepot('coach', zData.zones.departure.x, zData.zones.departure.y, zData.zones.departure.z, zData.zones.departure.h, pData, 1, function(bData)
-            activeBus = bData
-            activeDriver = pData
-            activeDepot = dData     
-            SetPedIntoVehicle(activeDriver, activeBus, -1) 
+           SetPedIntoVehicle(activeDriver, activeBus, -1) 
         end)
     end)
     --
     Citizen.Wait(100)
     -----------------------------------------------------
-    local netid = NetworkGetNetworkIdFromEntity(activeBus) 
-    TriggerServerEvent('bdm:makepass', {activeBus,netid,zData})  
+    TriggerServerEvent('bdm:makepass', {activeBus,activeBusNetId,zData})  
     Citizen.Wait(60000)
-    TriggerServerEvent('bdm:delpass', {activeBus,netid})
+    TriggerServerEvent('bdm:delpass', {activeBus,activeBusNetId})
     Citizen.Wait(1000)
     for i = 0, 5 do
         SetVehicleDoorShut(activeBus, i, false)
