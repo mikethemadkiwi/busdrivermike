@@ -1,5 +1,5 @@
 local isReady = false
-local polydebug = true
+local polydebug = false
 local Depot = {}
 local Driver = {}
 local Blip = {}
@@ -66,9 +66,7 @@ function spawnBusDriver(Depot, cb)
         SetPedRelationshipGroupHash(activeDriver, pedGroup)
         SetCanAttackFriendly(activeDriver, false, false)
         SetPedCombatMovement(activeDriver, 0)
-
         print('driver spawn:'.. activeDriver .. '')
-
         if cb ~= nil then
 			cb(activeDriver)
 		end
@@ -96,9 +94,7 @@ function spawnBusAtDepot(busmodel, x, y, z, heading, driverPed, route, cb)
 			Citizen.Wait(0)
 		end
 		SetVehRadioStation(activeBus, 'OFF')
-
         print('bus spawn:'.. activeBus .. ' netid: '.. activeBusNetId ..'')
-
 		if cb ~= nil then
 			cb(activeBus)
 		end
