@@ -231,7 +231,7 @@ AddEventHandler('bdm:beginroute', function(busData)
             SetPedIntoVehicle(activeDriver, activeBus, -1)            
             -----------------------------------------------------
             TriggerServerEvent('bdm:makepass', {activeBus,activeBusNetId,zData})  
-            Citizen.Wait(60000)
+            Citizen.Wait(30000)
             TriggerServerEvent('bdm:delpass', {activeBus,activeBusNetId})
             Citizen.Wait(1000)
             for i = 0, 5 do
@@ -338,7 +338,7 @@ Citizen.CreateThread(function()
 		if NetworkIsPlayerActive(PlayerId()) then
 			TriggerServerEvent('bdm:getlists')
             local v, pedGroup = AddRelationshipGroup('bdmDrivers')  
-            SetRelationshipBetweenGroups(0, GetHashKey("PLAYER"), pedGroup)
+            SetRelationshipBetweenGroups(0, GetHashKey("PLAYER"), pedGroup) -- doesnt this need to be done every tick??
             SetRelationshipBetweenGroups(0, pedGroup, GetHashKey("PLAYER"))
             isReady = true
 			break
