@@ -188,8 +188,7 @@ end)
 --
 RegisterNetEvent('bdm:makeclientpass')
 AddEventHandler('bdm:makeclientpass', function(bId)
-    -- local buspass = NetworkGetEntityFromNetworkId(bId[2])
-    SetVehicleIsConsideredByPlayer(buspass, false)
+    -- SetVehicleIsConsideredByPlayer(buspass, false)
     local pCoords = vector3(bId[3].zones.passenger.x, bId[3].zones.passenger.y, bId[3].zones.passenger.z)
     PassengerZones[bId[2]] = CircleZone:Create(pCoords, 1.0, {
         name="passengerZone",
@@ -198,7 +197,9 @@ AddEventHandler('bdm:makeclientpass', function(bId)
     })
     PassengerZones[bId[2]]:onPlayerInOut(function(isPointInside, point, zone)
         if isPointInside then
-            putplayerinseat(bId[2])
+            local buspass = NetworkGetEntityFromNetworkId(bId[2])
+            print(isPointInside..' - '..buspass..' - '..bId[2])
+            putplayerinseat(buspass)
         end
     end)	
 end)
