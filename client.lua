@@ -199,7 +199,7 @@ AddEventHandler('bdm:makeclientpass', function(bId)
         if isPointInside then
             local buspass = NetworkGetEntityFromNetworkId(bId[2])
             putplayerinseat(buspass) 
-            print('Entered Bus LOCAL: '..buspass..' NET: '..bId[1].. '/'..bId[2]..' ')
+            print('Entered Bus LOCAL: '..buspass..' NET: '..bId[2]..' ')
         end
     end)	
 end)
