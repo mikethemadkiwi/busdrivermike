@@ -1,5 +1,5 @@
 local isReady = false
-local polydebug = true
+local polydebug = false
 local Depot = {}
 local Driver = {}
 local Blip = {}
@@ -198,7 +198,7 @@ AddEventHandler('bdm:makeclientpass', function(bId)
     PassengerZones[bId[2]]:onPlayerInOut(function(isPointInside, point, zone)
         if isPointInside then
             local buspass = NetworkGetEntityFromNetworkId(bId[2])
-            print(' local: '..buspass..' Bus: '..bId[1].. '/'..bId[2]..'')
+            print('LOCAL Bus: '..buspass..' NET Bus: '..bId[1].. '/'..bId[2]..'')
             putplayerinseat(buspass)
         end
     end)	
@@ -228,7 +228,7 @@ AddEventHandler('bdm:beginroute', function(busData)
     Citizen.Wait(100)
     local busdriver = spawnBusDriver(zData, function(pData)
         Citizen.Wait(100)
-        local drivenbus = spawnBusAtDepot('coach', zData.zones.departure.x, zData.zones.departure.y, zData.zones.departure.z, zData.zones.departure.h, pData, 1, function(bData)
+        local drivenbus = spawnBusAtDepot('bus', zData.zones.departure.x, zData.zones.departure.y, zData.zones.departure.z, zData.zones.departure.h, pData, 1, function(bData)
             SetPedIntoVehicle(activeDriver, activeBus, -1)            
             -----------------------------------------------------
             TriggerServerEvent('bdm:makepass', {activeBus,activeBusNetId,zData})  
