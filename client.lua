@@ -204,7 +204,10 @@ AddEventHandler('bdm:makeclientpass', function(bId)
 end)
 --
 RegisterNetEvent('bdm:delclientpass')
-AddEventHandler('bdm:delclientpass', function(bId)    
+AddEventHandler('bdm:delclientpass', function(bId)
+    for j=1, #bId do
+        print(bId[j]) 
+    end
     local buspass = NetworkGetEntityFromNetworkId(bId[2])  
     PassengerZones[buspass]:destroy()
 end)
