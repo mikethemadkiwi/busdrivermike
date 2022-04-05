@@ -17,7 +17,7 @@ activeBus = nil
 activeBusNetId = nil
 activeDriver = nil
 activeState = nil
---
+-- wot?
 function draw2screen(text, r, g, b, a, x, y, scale)
     SetTextFont(4)
     SetTextProportional(true)
