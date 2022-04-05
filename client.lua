@@ -198,7 +198,6 @@ AddEventHandler('bdm:makeclientpass', function(bId)
     PassengerZones[bId[2]]:onPlayerInOut(function(isPointInside, point, zone)
         if isPointInside then
             local buspass = NetworkGetEntityFromNetworkId(bId[2])
-            print('LOCAL Bus: '..buspass..' NET Bus: '..bId[1].. '/'..bId[2]..'')
             putplayerinseat(buspass)
         end
     end)	
@@ -206,7 +205,6 @@ end)
 --
 RegisterNetEvent('bdm:delclientpass')
 AddEventHandler('bdm:delclientpass', function(bId)
-    -- local buspass = NetworkGetEntityFromNetworkId(bId[2])  
     PassengerZones[bId[2]]:destroy()
 end)
 --
