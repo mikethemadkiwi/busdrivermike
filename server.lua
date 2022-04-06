@@ -6,13 +6,13 @@ local depotLock = {}
     BDDB.Depot = {
         {
             uid = 'Legion1',
-            name = "Legion Sq",
+            name = "Legion Square",
             aZone = 997,
             zones = {
                 menu = {x = 256.040, y = -866.1, z = 28.357},
                 passenger = {x = 242.461, y = -862.791, z = 28.683},
                 departure = {x = 238.818, y = -859.174, z = 30.478, h = 249.654},
-                recieving = {x = 246.363, y = -859.698, z = 28.502, h = 249.013}
+                recieving = {x = 238.818, y = -859.174, z = 30.478, h = 249.654}
             },
             blip = {sprite = 58, color = 3, scale = 1.0}
         },
@@ -157,6 +157,18 @@ local depotLock = {}
                 passenger = {x = 766.092, y = -2996.319, z = 4.863},
                 departure = {x = 769.257, y = -3000.363, z = 5.95, h = 60.108},
                 recieving = {x = 760.9, y = -2948.5, z = 5.85, h = 332.07}
+            },
+            blip = {sprite = 58, color = 3, scale = 1.0}
+        }, 
+        {
+            uid = 'Event1',
+            name = "Player Event Location",
+            aZone = 486,
+            zones = {
+                menu = {x = 1988.687, y = 2680.971, z = 46.111},
+                passenger = {x = 766.092, y = -2996.319, z = 4.863},
+                departure = {x = 2010.751, y = 2661.973, z = 46.950, h = 304.202},
+                recieving = {x = 1977.4, y = 2652.5, z = 46.4, h = 126.323}
             },
             blip = {sprite = 58, color = 3, scale = 1.0}
         }
