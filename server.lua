@@ -165,7 +165,7 @@ local depotLock = {}
             name = "Player Event Location",
             aZone = 486,
             zones = {
-                menu = {x = 2020.404, y = 262662.025, z = 45.954},
+                menu = {x = 2020.404, y = 2662.025, z = 45.954},
                 passenger = {x = 2015.521, y = 2659.573, z = 46.861},
                 departure = {x = 2010.668, y = 2657.876, z = 47.680, h = 310.133},
                 recieving = {x = 2009.414, y = 2676.459, z = 47.63, h = 127.206}
