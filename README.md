@@ -18,4 +18,10 @@ nothing flashy atm cos i havent played with ai yet or timings etc. next version 
 2. the bus stops. departures arent bad, but the stops are janky.   
 3. the way locations are handled. i'd LIKE to tie them to actual bus stops. but again... Dat AI y'all.   
 
+### Thanks to:   
+1. 19firefox84 - endless bus rider. on and off on and off.... buses in our dreams.
+2. MrJDucky Esq. III - bug testing and endless bus rider.
+2. Zvinqq - bug testing and endless bus rider.
+3. Plagaᴳᴿᴰ - additional locations and bug reporting.
+
 ### [Video Showcase](https://youtu.be/J1AlGcMldQI)
