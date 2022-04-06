@@ -1,7 +1,7 @@
 local depotLock = {}
-local dbfile = LoadResourceFile(GetCurrentResourceName(), "BDDB.json")
-BDDB = json.decode(dbfile)
-if BDDB == nil then
+-- local dbfile = LoadResourceFile(GetCurrentResourceName(), "BDDB.json")
+-- BDDB = json.decode(dbfile)
+-- if BDDB == nil then
     BDDB = {}
     BDDB.Depot = {
         {
@@ -174,9 +174,9 @@ if BDDB == nil then
             routes = false
         }
     }
-    local encodedData = json.encode(BDDB)
-    local saved = SaveResourceFile(GetCurrentResourceName(), "BDDB.json", encodedData, -1)
-end
+--     local encodedData = json.encode(BDDB)
+--     local saved = SaveResourceFile(GetCurrentResourceName(), "BDDB.json", encodedData, -1)
+-- end
 --
 RegisterServerEvent('bdm:updatedepot')
 AddEventHandler('bdm:updatedepot', function(depot)
