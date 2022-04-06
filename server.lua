@@ -166,9 +166,9 @@ local depotLock = {}
             aZone = 486,
             zones = {
                 menu = {x = 1988.687, y = 2680.971, z = 45.111},
-                passenger = {x = 766.092, y = -2996.319, z = 4.863},
-                departure = {x = 2010.751, y = 2661.973, z = 46.950, h = 304.202},
-                recieving = {x = 1977.4, y = 2652.5, z = 46.4, h = 126.323}
+                passenger = {x = 2015.521, y = 2659.573, z = 46.861},
+                departure = {x = 2010.668, y = 2657.876, z = 47.680, h = 310.133},
+                recieving = {x = 2009.414, y = 2676.459, z = 47.63, h = 127.206}
             },
             blip = {sprite = 58, color = 3, scale = 1.0}
         }
