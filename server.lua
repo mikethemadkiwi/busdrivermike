@@ -5,6 +5,18 @@ if BDDB == nil then
     BDDB = {}
     BDDB.Depot = {
         {
+            uid = 'eventexample1',
+            name = "Event Bus",
+            aZone = 997,
+            zones = {
+                menu = {x = 256.040, y = -866.1, z = 28.357},
+                passenger = {x = 219.763, y = -846.522, z = 30.313},
+                departure = {x = 219.763, y = -846.522, z = 30.313, h = 244.623},
+                recieving = {x = 241.346, y = -854.358, z = 29.770, h = 249.013}
+            },
+            blip = {sprite = 58, color = 3, scale = 1.0}
+        },
+        {
             uid = 'city1',
             name = "Town Hall",
             aZone = 17,
