@@ -158,8 +158,8 @@ BDDB.Depot = {
         blip = {sprite = 58, color = 3, scale = 1.0}
     }, 
     {
-        uid = 'Event1',
-        name = "Player Event Location",
+        uid = 'prison1',
+        name = "Bolingbroke Penitentiary",
         aZone = 486,
         zones = {
             menu = {x = 2020.404, y = 2662.025, z = 45.954},
@@ -230,7 +230,7 @@ AddEventHandler('bdm:requestRoute', function(zone)
             TriggerClientEvent('bdm:errormsg', source, 'Transfer Used Too Recently! Please Wait!')
         end
     else
-        depotLock[inZone.uid] = GetGameTimer() + 120000
+        depotLock[inZone.uid] = GetGameTimer() + 60000
         print('Route: '..outZone.name..' Requested by '..GetPlayerName(source)..' from Zone: '..inZone.name)
         TriggerClientEvent('bdm:beginroute', source, {inZone, outZone})
     end
