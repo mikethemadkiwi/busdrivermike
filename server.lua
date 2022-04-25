@@ -172,12 +172,24 @@ BDDB.Depot = {
     {
         uid = 'mtchiliad1',
         name = "Rocket @ ChiliadEast",
-        aZone = 486,
+        aZone = 107,
         zones = {
             menu = {x = 1645.186, y = 6421.624, z = 27.411},
             passenger = {x = 1643.169, y = 6418.350, z = 27.408},
             departure = {x = 1646.981, y = 6415.127, z = 29.531, h = 71.926},
             recieving = {x = 1646.981, y = 6415.127, z = 29.531, h = 71.926}
+        },
+        blip = {sprite = 58, color = 3, scale = 1.0}
+    }, 
+    {
+        uid = 'tatamo1',
+        name = "Rocket @ ChiliadEast",
+        aZone = 129,
+        zones = {
+            menu = {x = 2589.346, y = 426.168, z = 107.540},
+            passenger = {x = 2585.356, y = 408.884, z = 107.456},
+            departure = {x = 2587.355, y = 413.716, z = 109.288, h = 178.275},
+            recieving = {x = 2587.355, y = 413.716, z = 109.288, h = 178.275}
         },
         blip = {sprite = 58, color = 3, scale = 1.0}
     }
