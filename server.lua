@@ -168,6 +168,18 @@ BDDB.Depot = {
             recieving = {x = 2009.414, y = 2676.459, z = 47.63, h = 127.206}
         },
         blip = {sprite = 58, color = 3, scale = 1.0}
+    }, 
+    {
+        uid = 'mtchiliad1',
+        name = "Rocket @ ChiliadEast",
+        aZone = 486,
+        zones = {
+            menu = {x = 1645.186, y = 6421.624, z = 45.954},
+            passenger = {x = 1643.169, y = 6418.350, z = 27.408},
+            departure = {x = 1646.981, y = 6415.127, z = 29.531, h = 71.926},
+            recieving = {x = 1646.981, y = 6415.127, z = 29.531, h = 71.926}
+        },
+        blip = {sprite = 58, color = 3, scale = 1.0}
     }
 }
 BDDB.Driver = {}
