@@ -174,7 +174,7 @@ BDDB.Depot = {
         name = "Rocket @ ChiliadEast",
         aZone = 486,
         zones = {
-            menu = {x = 1645.186, y = 6421.624, z = 45.954},
+            menu = {x = 1645.186, y = 6421.624, z = 27.411},
             passenger = {x = 1643.169, y = 6418.350, z = 27.408},
             departure = {x = 1646.981, y = 6415.127, z = 29.531, h = 71.926},
             recieving = {x = 1646.981, y = 6415.127, z = 29.531, h = 71.926}
