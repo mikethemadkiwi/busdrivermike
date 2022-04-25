@@ -183,7 +183,7 @@ BDDB.Depot = {
     }, 
     {
         uid = 'tatamo1',
-        name = "Rocket @ ChiliadEast",
+        name = "Ron's Tatavian Hyw",
         aZone = 129,
         zones = {
             menu = {x = 2589.346, y = 426.168, z = 107.540},
