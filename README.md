@@ -18,7 +18,7 @@ nothing flashy atm cos i havent played with ai yet or timings etc. next version 
 
 ### Usage  
 1. install and run. no setup needed!   
-2. add new stops to the server config! => handy command included (/getInfoForWaypoint)   
+2. add new stops to the server config! => handy command included ( /GIFW )   
 
 ### Things planned to fix.   
 1. The god awful AI. it's not TERRIBLE. but it's not great either.   
