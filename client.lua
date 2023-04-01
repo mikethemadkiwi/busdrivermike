@@ -12,6 +12,7 @@ local currentZone = nil
 local currentRoutes = nil
 local pedGroup = nil  
 local drivingStyle = 786603
+local maxBusSpeed = 20.0
 -- local drivingStyle = 411
 activeDepot = nil
 activeBus = nil
@@ -107,12 +108,12 @@ function DeleteBusAndDriver(vehicle, driver)
 			TaskLeaveVehicle(PlayerPedId(), vehicle, 0)
 		end
 
-		local blip = GetBlipFromEntity(vehicle)
+		-- local blip = GetBlipFromEntity(vehicle)
 
-		if DoesBlipExist(blip) then
-			RemoveBlip(blip)
-            BusBlip[vehicle] = nil
-		end
+		-- if DoesBlipExist(blip) then
+		-- 	RemoveBlip(blip)
+        --     BusBlip[vehicle] = nil
+		-- end
 
 		DeleteEntity(driver)
 		DeleteEntity(vehicle)
@@ -233,6 +234,7 @@ AddEventHandler('bdm:beginroute', function(busData)
         local drivenbus = spawnBusAtDepot('coach', zData.zones.departure.x, zData.zones.departure.y, zData.zones.departure.z, zData.zones.departure.h, pData, 1, function(bData)
             SetPedIntoVehicle(activeDriver, activeBus, -1)            
             -----------------------------------------------------
+            TriggerServerEvent('bdm:makebusblip', activeBusNetId)
             TriggerServerEvent('bdm:makepass', {activeBus,activeBusNetId,zData})  
             Citizen.Wait(30000)
             TriggerServerEvent('bdm:delpass', {activeBus,activeBusNetId})
@@ -241,12 +243,41 @@ AddEventHandler('bdm:beginroute', function(busData)
                 SetVehicleDoorShut(activeBus, i, false)
             end
             activeState = 1
-            TaskVehicleDriveToCoordLongrange(activeDriver, activeBus, activeDepot.zones.recieving.x, activeDepot.zones.recieving.y, activeDepot.zones.recieving.z, 15.0, drivingStyle, 5.0)
+            TaskVehicleDriveToCoordLongrange(activeDriver, activeBus, activeDepot.zones.recieving.x, activeDepot.zones.recieving.y, activeDepot.zones.recieving.z, maxBusSpeed, drivingStyle, 5.0)
             SetPedKeepTask(activeDriver, true)
+            print('AI: Moving to Active Depot @ '.. maxBusSpeed)
             ---------------------------------------------------- 
         end)
     end)
     --
+end)
+
+AddTextEntry('BUSBLIP', 'Bus ~a~')
+
+RegisterNetEvent('bdm:makebusblip')
+AddEventHandler('bdm:makebusblip', function(busNetId)
+    -- print(busNetId)
+    local tBus = NetToVeh(busNetId)
+    -- print(tBus)
+    if DoesBlipExist(BusBlip[tBus]) then
+        print('Blip Exists, Skipping Creation.')
+    else
+        print('Blip Requested for: '..busNetId.. ' / '..tBus)
+        BusBlip[tBus] = AddBlipForEntity(tBus)
+        SetBlipAsFriendly(BusBlip[tBus], true)
+        SetBlipSprite(BusBlip[tBus], 67)
+        SetBlipColour(BusBlip[tBus], 24)
+        BeginTextCommandSetBlipName('BUSBLIP')
+        AddTextComponentSubstringPlayerName(busNetId)
+        EndTextCommandSetBlipName(BusBlip[tBus])
+    end
+end)
+RegisterNetEvent('bdm:delbusblip')
+AddEventHandler('bdm:delbusblip', function(busNetId)
+    local tBus = NetToVeh(busNetId)
+    RemoveBlip(BusBlip[tBus])
+    print('Removed Blip: '..busNetId.. ' / '..tBus)
+    BusBlip[tBus] = nil
 end)
 --
 Citizen.CreateThread(function()
@@ -287,41 +318,55 @@ Citizen.CreateThread(function()
                 SetVehicleEngineOn(activeBus, true, true, false)
             else
                 SetVehicleHandbrake(activeBus, false)
-                if distancetostop <= 100.0 then
-                    if distancetostop >= 99.0 then
-                        TaskVehicleDriveToCoordLongrange(activeDriver, activeBus, activeDepot.zones.recieving.x, activeDepot.zones.recieving.y, activeDepot.zones.recieving.z, 12.5, drivingStyle, 5.0)
-                        SetPedKeepTask(activeDriver, true)
+
+                if distancetostop >= 100.0 then
+                    -- TaskVehicleDriveToCoordLongrange(activeDriver, activeBus, activeDepot.zones.recieving.x, activeDepot.zones.recieving.y, activeDepot.zones.recieving.z, maxBusSpeed, drivingStyle, 5.0)  
+                    -- print('AI: Moving to Active Depot @ '.. maxBusSpeed)
+                    -- Citizen.Wait(120000)
+                else
+                    --
+                    -- if distancetostop < 100.0 then
+                    --     TaskVehicleDriveToCoordLongrange(activeDriver, activeBus, activeDepot.zones.recieving.x, activeDepot.zones.recieving.y, activeDepot.zones.recieving.z, maxBusSpeed, drivingStyle, 5.0)  
+                    --     print('AI: Moving to Active Depot @ '.. maxBusSpeed)
+                    -- end
+                    if distancetostop <= 75.0 then
+                        if distancetostop >= 74.0 then
+                            local sublight = ((maxBusSpeed / 4) * 3)
+                            print('AI: Slowing to : '.. sublight)
+                            TaskVehicleDriveToCoordLongrange(activeDriver, activeBus, activeDepot.zones.recieving.x, activeDepot.zones.recieving.y, activeDepot.zones.recieving.z, sublight, drivingStyle, 5.0)
+                            SetPedKeepTask(activeDriver, true)
+                        end
                     end
-                end
-                if distancetostop <= 75.0 then
-                    if distancetostop >= 74.0 then
-                        TaskVehicleDriveToCoordLongrange(activeDriver, activeBus, activeDepot.zones.recieving.x, activeDepot.zones.recieving.y, activeDepot.zones.recieving.z, 10.0, drivingStyle, 5.0)
-                        SetPedKeepTask(activeDriver, true)
+                    if distancetostop <= 50.0 then
+                        if distancetostop >= 49.0 then 
+                            local sublight2 = ((maxBusSpeed / 4) * 2)
+                            print('AI: Slowing to : '.. sublight2)
+                            TaskVehicleDriveToCoordLongrange(activeDriver, activeBus, activeDepot.zones.recieving.x, activeDepot.zones.recieving.y, activeDepot.zones.recieving.z, sublight2, drivingStyle, 5.0)
+                            SetPedKeepTask(activeDriver, true)
+                        end
                     end
-                end
-                if distancetostop <= 50.0 then
-                    if distancetostop >= 49.0 then 
-                        TaskVehicleDriveToCoordLongrange(activeDriver, activeBus, activeDepot.zones.recieving.x, activeDepot.zones.recieving.y, activeDepot.zones.recieving.z, 7.5, drivingStyle, 5.0)
-                        SetPedKeepTask(activeDriver, true)
+                    if distancetostop <= 25.0 then
+                        if distancetostop >= 24.0 then 
+                            local sublight3 = (maxBusSpeed / 4)
+                            print('AI: Slowing to : '.. sublight3)
+                            TaskVehicleDriveToCoordLongrange(activeDriver, activeBus, activeDepot.zones.recieving.x, activeDepot.zones.recieving.y, activeDepot.zones.recieving.z, sublight3, drivingStyle, 5.0)
+                            SetPedKeepTask(activeDriver, true)
+                        end
                     end
-                end
-                if distancetostop <= 30.0 then
-                    if distancetostop >= 29.0 then 
-                        TaskVehicleDriveToCoordLongrange(activeDriver, activeBus, activeDepot.zones.recieving.x, activeDepot.zones.recieving.y, activeDepot.zones.recieving.z, 5.0, drivingStyle, 5.0)
-                        SetPedKeepTask(activeDriver, true)
+                    if distancetostop <= 10.0 then
+                        TaskVehicleTempAction(activeDriver, activeBus, 6, 2000)
+                        SetVehicleHandbrake(activeBus, true)
+                        SetVehicleEngineOn(activeBus, false, true, false)                    
+                        local playerPed = PlayerPedId()    
+                        ClearPedTasks(playerPed)
+                        local netid = NetworkGetNetworkIdFromEntity(activeBus)
+                        TriggerServerEvent('bdm:delbusblip', netid)
+                        TriggerServerEvent('bdm:getoutofbus', {activeBus,netid})
+                        Citizen.Wait(15000)
+                        DeleteBusAndDriver(activeBus, activeDriver)  
                     end
-                end
-                if distancetostop <= 15.0 then
-                    TaskVehicleTempAction(activeDriver, activeBus, 6, 2000)
-                    SetVehicleHandbrake(activeBus, true)
-                    SetVehicleEngineOn(activeBus, false, true, false)                    
-                    local playerPed = PlayerPedId()    
-                    ClearPedTasks(playerPed)
-                    local netid = NetworkGetNetworkIdFromEntity(activeBus)
-                    TriggerServerEvent('bdm:getoutofbus', {activeBus,netid})
-                    Citizen.Wait(15000)
-                    DeleteBusAndDriver(activeBus, activeDriver)  
-                end
+                    --
+                end                
             end            
         end
 	end

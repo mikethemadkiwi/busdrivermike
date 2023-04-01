@@ -259,3 +259,16 @@ AddEventHandler('bdm:requestRoute', function(zone)
         TriggerClientEvent('bdm:beginroute', source, {inZone, outZone})
     end
 end)
+-----
+--- Bus Blips
+local NetBusBlips = {}
+RegisterServerEvent('bdm:makebusblip')
+AddEventHandler('bdm:makebusblip', function(busNetId)
+    NetBusBlips[busNetId] = busNetId
+    TriggerClientEvent('bdm:makebusblip', -1, busNetId)
+end)
+RegisterServerEvent('bdm:delbusblip')
+AddEventHandler('bdm:delbusblip', function(busNetId)
+    NetBusBlips[busNetId] = nil
+    TriggerClientEvent('bdm:delbusblip', -1, busNetId)
+end)
