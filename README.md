@@ -24,7 +24,8 @@ nothing flashy atm cos i havent played with ai yet or timings etc. next version 
 1. The god awful AI. it's not TERRIBLE. but it's not great either.  
  ( AI is still godawful... but it's better in some cases, if that makes sense. )   
 2. the bus stops. departures arent bad, but the stops are janky.   
-3. the way locations are handled. i'd LIKE to tie them to actual bus stops. but again... Dat AI y'all.   
+3. the way locations are handled. i'd LIKE to tie them to actual bus stops. but again... Dat AI y'all.
+4. Bus Spawns moved to server side handled spawn, not client-host handled.
 
 ### Thanks to:   
 1. 19firefox84 - endless bus rider. on and off on and off.... buses in our dreams.
